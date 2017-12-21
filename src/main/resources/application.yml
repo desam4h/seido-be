@@ -7,11 +7,21 @@ spring:
   jackson:
     serialization:
       INDENT_OUTPUT: true
+  jpa:
+    database: POSTGRESQL
+    show-sql: false
+    
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/registros
+    username: postgres
+    password: postgres
+    driverClassName: org.postgresql.Driver
 
 jwt:
   header: Authorization
   secret: mySecret
-  expiration: 604800
+  expiration: 10800
   route:
     authentication:
       path: auth
