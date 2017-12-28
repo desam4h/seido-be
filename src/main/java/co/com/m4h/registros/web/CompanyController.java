@@ -3,8 +3,6 @@ package co.com.m4h.registros.web;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +23,7 @@ import co.com.m4h.registros.service.CompanyService;
 @RequestMapping(value = "/company", produces = Constant.CONTENT_TYPE_JSON)
 public class CompanyController {
 	// consumes = Constant.CONTENT_TYPE_JSON,
-	private final Log logger = LogFactory.getLog(this.getClass());
+	// private final Log logger = LogFactory.getLog(this.getClass());
 
 	@Autowired
 	private CompanyService companyService;

@@ -18,6 +18,7 @@ import lombok.ToString;
 @Entity
 public class Specialty extends AbstractEntity {
 	private String name;
+
 	@JsonIgnore
 	@ManyToOne
 	private Company company;

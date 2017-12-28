@@ -8,8 +8,5 @@ import co.com.m4h.registros.model.Company;
  * Created by hernan on 7/2/17.
  */
 public interface CompanyService extends GenericCrud<Company> {
-	/**
-	 * @return
-	 */
 	List<Company> findAll();
 }
