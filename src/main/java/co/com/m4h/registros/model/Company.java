@@ -32,9 +32,6 @@ public class Company extends AbstractEntity {
 
 	private String nit;
 
-	/**
-	 *
-	 */
 	public Company() {
 	}
 

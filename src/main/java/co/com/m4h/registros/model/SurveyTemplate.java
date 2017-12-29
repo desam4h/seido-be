@@ -19,10 +19,13 @@ import lombok.ToString;
 @Entity
 public class SurveyTemplate extends AbstractEntity {
 	private String name;
+
 	@Column(columnDefinition = "text")
 	private String jsSurvey;
+
 	@Enumerated(EnumType.STRING)
 	private SurveyType type;
+
 	@ManyToOne
 	private Specialty specialty;
 }
