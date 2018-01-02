@@ -17,9 +17,13 @@ import lombok.ToString;
 @ToString
 @Entity
 public class Patient extends AbstractEntity {
+
 	private String firstName;
+
 	private String lastName;
+
 	private String nuip;
+
 	@ManyToOne
 	@JsonIgnore
 	private Company company;

@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import co.com.m4h.registros.model.Company;
+
 public class JwtUser implements UserDetails {
 
 	private static final long serialVersionUID = 8766099183082790037L;
@@ -21,9 +23,11 @@ public class JwtUser implements UserDetails {
 	private final Collection<? extends GrantedAuthority> authorities;
 	private final boolean enabled;
 	private final Date lastPasswordResetDate;
+	private final Company company;
 
 	public JwtUser(Long id, String username, String firstname, String lastname, String email, String password,
-			Collection<? extends GrantedAuthority> authorities, boolean enabled, Date lastPasswordResetDate) {
+			Collection<? extends GrantedAuthority> authorities, boolean enabled, Date lastPasswordResetDate,
+			Company company) {
 		this.id = id;
 		this.username = username;
 		this.firstname = firstname;
@@ -33,6 +37,7 @@ public class JwtUser implements UserDetails {
 		this.authorities = authorities;
 		this.enabled = enabled;
 		this.lastPasswordResetDate = lastPasswordResetDate;
+		this.company = company;
 	}
 
 	@JsonIgnore
@@ -94,5 +99,9 @@ public class JwtUser implements UserDetails {
 	@JsonIgnore
 	public Date getLastPasswordResetDate() {
 		return lastPasswordResetDate;
+	}
+
+	public Company getCompany() {
+		return company;
 	}
 }

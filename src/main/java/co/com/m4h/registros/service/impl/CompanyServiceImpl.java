@@ -4,19 +4,16 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import co.com.m4h.registros.model.Company;
 import co.com.m4h.registros.persistence.CompanyRepository;
 import co.com.m4h.registros.service.CompanyService;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by hernan on 7/4/17.
  */
 @Service
-@Slf4j
 public class CompanyServiceImpl implements CompanyService {
 	@Autowired
 	private CompanyRepository companyRepository;
@@ -28,11 +25,7 @@ public class CompanyServiceImpl implements CompanyService {
 
 	@Override
 	public void delete(Long companyId) {
-		try {
-			companyRepository.delete(companyId);
-		} catch (EmptyResultDataAccessException e) {
-			log.warn(e.getMessage());
-		}
+		companyRepository.delete(companyId);
 	}
 
 	@Override

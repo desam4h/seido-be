@@ -18,7 +18,7 @@ public final class JwtUserFactory {
 	public static JwtUser create(User user) {
 		return new JwtUser(user.getId(), user.getUsername(), user.getFirstname(), user.getLastname(), user.getEmail(),
 				user.getPassword(), mapToGrantedAuthorities(Arrays.asList(user.getAuthority())), user.getEnabled(),
-				user.getLastPasswordResetDate());
+				user.getLastPasswordResetDate(), user.getCompany());
 	}
 
 	private static List<GrantedAuthority> mapToGrantedAuthorities(List<Authority> authorities) {

@@ -3,6 +3,7 @@ package co.com.m4h.registros.web;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,26 +15,35 @@ import org.springframework.web.bind.annotation.RestController;
 import co.com.m4h.registros.common.Constant;
 import co.com.m4h.registros.model.Specialty;
 import co.com.m4h.registros.service.SpecialtyService;
+import co.com.m4h.registros.util.SecurityUtil;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by hernan on 7/2/17.
  */
+@Slf4j
 @RestController
 @RequestMapping(value = "/specialty", produces = Constant.CONTENT_TYPE_JSON)
 public class SpecialtyController {
 
 	// consumes = Constant.CONTENT_TYPE_JSON,
-	// private final Log logger = LogFactory.getLog(this.getClass());
 
 	@Autowired
 	private SpecialtyService specialtyService;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<Specialty>> findAll() {
-		// Long companyId = SecurityUtil.getCompanyId();
-		// List<Specialty> specialties = specialtyService.findAllByCompanyId(companyId);
-		List<Specialty> specialties = specialtyService.findAll();
-		return new ResponseEntity<>(specialties, HttpStatus.OK);
+
+		if (SecurityUtil.getRole().equals("ROLE_ROOT")) {
+			List<Specialty> specialties = specialtyService.findAll();
+
+			return new ResponseEntity<>(specialties, HttpStatus.OK);
+		} else {
+			Long companyId = SecurityUtil.getCompanyId();
+			List<Specialty> specialties = specialtyService.findAllByCompanyId(companyId);
+
+			return new ResponseEntity<>(specialties, HttpStatus.OK);
+		}
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
@@ -60,7 +70,17 @@ public class SpecialtyController {
 
 	@RequestMapping(value = "/{specialtyId}", method = RequestMethod.DELETE)
 	public ResponseEntity<Specialty> delete(@PathVariable("specialtyId") Long specialtyId) {
-		specialtyService.delete(specialtyId);
-		return new ResponseEntity<>(HttpStatus.ACCEPTED);
+		try {
+			specialtyService.delete(specialtyId);
+			return new ResponseEntity<>(HttpStatus.ACCEPTED);
+
+		} catch (DataIntegrityViolationException e) {
+			log.warn(e.getMessage());
+			return new ResponseEntity<>(HttpStatus.FAILED_DEPENDENCY);
+
+		} catch (Exception e) {
+			log.warn(e.getMessage());
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
+		}
 	}
 }
