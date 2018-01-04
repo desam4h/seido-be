@@ -20,7 +20,6 @@ import co.com.m4h.registros.service.EventService;
  */
 @RestController
 @RequestMapping(value = "/patient/{patientId}/event", produces = Constant.CONTENT_TYPE_JSON)
-@SuppressWarnings(Constant.WARNING_UNUSED)
 public class EventController {
 	// consumes = Constant.CONTENT_TYPE_JSON,
 

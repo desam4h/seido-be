@@ -21,13 +21,20 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 public class SurveyStatistics {
+
 	@Id
 	private Long surveyId;
+
 	private Long companyId;
+
 	private Long specialtyId;
+
 	private Long templateId;
+
 	private Long eventId;
+
 	private Long patientId;
+
 	private String surveyAnswersCsv;
 
 }

@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.com.m4h.registros.common.Constant;
+import co.com.m4h.registros.common.SecurityUtil;
 import co.com.m4h.registros.model.Specialty;
 import co.com.m4h.registros.service.SpecialtyService;
-import co.com.m4h.registros.util.SecurityUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**

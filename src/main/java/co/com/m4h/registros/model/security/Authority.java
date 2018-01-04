@@ -15,6 +15,9 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import co.com.m4h.registros.model.User;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -38,5 +41,6 @@ public class Authority {
 	private AuthorityName name;
 
 	@OneToMany(mappedBy = "authority", fetch = FetchType.LAZY)
+	@JsonIgnore
 	private List<User> users;
 }

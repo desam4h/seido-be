@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.com.m4h.registros.common.Constant;
 import co.com.m4h.registros.model.Patient;
-import co.com.m4h.registros.service.CompanyService;
 import co.com.m4h.registros.service.PatientService;
 
 /**
@@ -22,7 +21,6 @@ import co.com.m4h.registros.service.PatientService;
  */
 @RestController
 @RequestMapping(value = "/patient", produces = Constant.CONTENT_TYPE_JSON)
-@SuppressWarnings(Constant.WARNING_UNUSED)
 public class PatientController {
 	// consumes = Constant.CONTENT_TYPE_JSON,
 
@@ -32,9 +30,6 @@ public class PatientController {
 
 	@Autowired
 	private PatientService patientService;
-
-	@Autowired
-	private CompanyService companyService;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<Patient>> findAll() {

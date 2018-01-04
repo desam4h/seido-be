@@ -20,15 +20,20 @@ import lombok.ToString;
 @ToString
 @Entity
 public class Survey extends AbstractEntity {
+
 	@ManyToOne
 	private SurveyTemplate template;
+
 	@ManyToOne
 	private Event event;
+
 	@ManyToOne
 	@JsonIgnore
 	private Patient patient;
+
 	@Column(columnDefinition = "text")
 	private String surveyAnswers;
+
 	@Enumerated(EnumType.STRING)
 	private SurveyState state;
 

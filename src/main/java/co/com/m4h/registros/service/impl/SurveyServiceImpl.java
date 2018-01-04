@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import co.com.m4h.registros.common.utils.SurveyUtils;
+import co.com.m4h.registros.common.SurveyUtils;
 import co.com.m4h.registros.json.SurveyJs;
 import co.com.m4h.registros.model.Survey;
 import co.com.m4h.registros.model.SurveyState;

@@ -1,4 +1,4 @@
-package co.com.m4h.registros.util;
+package co.com.m4h.registros.common;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

@@ -6,9 +6,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import co.com.m4h.registros.model.security.User;
+import co.com.m4h.registros.model.User;
+import co.com.m4h.registros.persistence.UserRepository;
 import co.com.m4h.registros.security.JwtUserFactory;
-import co.com.m4h.registros.security.repository.UserRepository;
 
 @Service
 public class JwtUserDetailsServiceImpl implements UserDetailsService {

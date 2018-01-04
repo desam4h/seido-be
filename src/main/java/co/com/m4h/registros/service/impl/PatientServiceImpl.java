@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import co.com.m4h.registros.common.SecurityUtil;
 import co.com.m4h.registros.model.Company;
 import co.com.m4h.registros.model.Patient;
 import co.com.m4h.registros.model.Survey;
@@ -17,7 +18,6 @@ import co.com.m4h.registros.persistence.SurveyTemplateRepository;
 import co.com.m4h.registros.service.EventService;
 import co.com.m4h.registros.service.PatientService;
 import co.com.m4h.registros.service.SurveyService;
-import co.com.m4h.registros.util.SecurityUtil;
 
 /**
  * Created by hernan on 7/2/17.

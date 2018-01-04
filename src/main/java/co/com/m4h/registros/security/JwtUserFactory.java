@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import co.com.m4h.registros.model.User;
 import co.com.m4h.registros.model.security.Authority;
-import co.com.m4h.registros.model.security.User;
 
 public final class JwtUserFactory {
 
@@ -17,8 +17,8 @@ public final class JwtUserFactory {
 
 	public static JwtUser create(User user) {
 		return new JwtUser(user.getId(), user.getUsername(), user.getFirstname(), user.getLastname(), user.getEmail(),
-				user.getPassword(), mapToGrantedAuthorities(Arrays.asList(user.getAuthority())), user.getEnabled(),
-				user.getLastPasswordResetDate(), user.getCompany());
+				user.getPassword(), mapToGrantedAuthorities(Arrays.asList(user.getAuthority())),
+				user.getEnabled() == 1 ? true : false, user.getLastPasswordResetDate(), user.getCompany());
 	}
 
 	private static List<GrantedAuthority> mapToGrantedAuthorities(List<Authority> authorities) {

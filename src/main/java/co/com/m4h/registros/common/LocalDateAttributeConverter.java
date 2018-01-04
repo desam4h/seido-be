@@ -1,4 +1,4 @@
-package co.com.m4h.registros.common.utils;
+package co.com.m4h.registros.common;
 
 import java.sql.Date;
 import java.time.LocalDate;
