@@ -58,7 +58,7 @@ public class AuthenticationRestController {
 
 		// Return the token
 		return ResponseEntity.ok(new JwtAuthenticationResponse(user.getId(), user.getUsername(), user.getFirstname(),
-				user.getLastname(), role, token));
+				user.getLastname(), role, user.getCompany().getId(), token));
 	}
 
 	@RequestMapping(value = "${jwt.route.authentication.refresh}", method = RequestMethod.GET)
@@ -72,7 +72,7 @@ public class AuthenticationRestController {
 		if (jwtTokenUtil.canTokenBeRefreshed(token, user.getLastPasswordResetDate())) {
 			String refreshedToken = jwtTokenUtil.refreshToken(token);
 			return ResponseEntity.ok(new JwtAuthenticationResponse(user.getId(), user.getUsername(),
-					user.getFirstname(), user.getLastname(), role, refreshedToken));
+					user.getFirstname(), user.getLastname(), role, user.getCompany().getId(), refreshedToken));
 		} else {
 			return ResponseEntity.badRequest().body(null);
 		}

@@ -17,6 +17,15 @@ public final class SecurityUtil {
 		return role;
 	}
 
+	public static final Long getUserId() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		JwtUser data = (JwtUser) authentication.getPrincipal();
+		Long userId = data.getId();
+
+		return userId;
+	}
+
 	/**
 	 * Specific function that gets the companyID of the current logged user from the
 	 * JWT

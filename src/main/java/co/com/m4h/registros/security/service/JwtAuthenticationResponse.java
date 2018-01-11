@@ -11,16 +11,19 @@ public class JwtAuthenticationResponse implements Serializable {
 	private final String firstName;
 	private final String lastName;
 	private final String role;
+	private final Long companyid;
 	private final String token;
 
 	public JwtAuthenticationResponse(Long id, String userName, String firstName, String lastName, String role,
-			String token) {
+			Long companyid, String token) {
 		this.id = id;
 		this.userName = userName;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.role = role;
+		this.companyid = companyid;
 		this.token = token;
+
 	}
 
 	public Long getId() {
@@ -41,6 +44,10 @@ public class JwtAuthenticationResponse implements Serializable {
 
 	public String getRole() {
 		return role;
+	}
+
+	public Long getCompanyid() {
+		return companyid;
 	}
 
 	public String getToken() {

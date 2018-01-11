@@ -86,9 +86,17 @@ public class PatientServiceImpl implements PatientService {
 
 	@Override
 	public Optional<Patient> findByNuip(String nuip) {
-		// TODO: Pendiente
-		Long companyId = SecurityUtil.getCompanyId();
-		Patient p = patientRepository.findOneByCompanyIdAndNuip(companyId, nuip);
-		return Optional.ofNullable(p);
+		String role = SecurityUtil.getRole();
+
+		if (role.equals("ROLE_ROOT")) {
+			Patient p = patientRepository.findOneByNuip(nuip);
+
+			return Optional.ofNullable(p);
+		} else {
+			Long companyId = SecurityUtil.getCompanyId();
+			Patient p = patientRepository.findOneByCompanyIdAndNuip(companyId, nuip);
+
+			return Optional.ofNullable(p);
+		}
 	}
 }

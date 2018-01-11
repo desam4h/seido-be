@@ -1,5 +1,6 @@
 package co.com.m4h.registros.service.impl;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +21,7 @@ public class CompanyServiceImpl implements CompanyService {
 
 	@Override
 	public Company save(Company company) {
+		company.setCreatedDate(LocalDate.now());
 		return companyRepository.save(company);
 	}
 

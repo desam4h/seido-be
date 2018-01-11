@@ -9,5 +9,7 @@ import co.com.m4h.registros.model.User;
 public interface UserRepository extends JpaRepository<User, Long> {
 	List<User> findAllByCompanyId(Long companyId);
 
-	User findByUsername(String username);
+	User findOneByCompanyIdAndUsername(Long companyId, String username);
+
+	User findOneByUsername(String username);
 }

@@ -1,6 +1,5 @@
 package co.com.m4h.registros.web;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(value = "/company", produces = Constant.CONTENT_TYPE_JSON)
 public class CompanyController {
 	// consumes = Constant.CONTENT_TYPE_JSON,
-	// private final Log logger = LogFactory.getLog(this.getClass());
 
 	@Autowired
 	private CompanyService companyService;
@@ -39,7 +37,6 @@ public class CompanyController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<Company> save(@RequestBody Company company) {
-		company.setCreatedDate(LocalDate.now());
 		Company persistedCompany = companyService.save(company);
 		return new ResponseEntity<>(persistedCompany, HttpStatus.CREATED);
 	}

@@ -34,10 +34,6 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
 	public SurveyTemplate save(SurveyTemplate surveyTemplate, Long specialtyId) {
 		Specialty specialty = specialtyRepository.findOne(specialtyId);
 
-		// TODO: revisar que no creen un surveyTemplate de una especialidad de una
-		// empresa que no es la empresa del usuario logueado, a no ser que sea root
-		// comparar specialty.getCompany().getId() == el id de empresa del token jwt
-
 		Long companyId = SecurityUtil.getCompanyId();
 
 		if (!specialty.getCompany().getId().equals(companyId)) {

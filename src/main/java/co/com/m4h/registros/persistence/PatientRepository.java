@@ -22,4 +22,6 @@ public interface PatientRepository extends PagingAndSortingRepository<Patient, L
 	 * @return Patient if exist
 	 */
 	Patient findOneByCompanyIdAndNuip(Long companyId, String nuip);
+
+	Patient findOneByNuip(String nuip);
 }

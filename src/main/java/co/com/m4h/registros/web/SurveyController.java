@@ -20,7 +20,6 @@ import co.com.m4h.registros.service.SurveyService;
  */
 @RestController
 @RequestMapping(value = "/patient/{patientId}/survey", produces = Constant.CONTENT_TYPE_JSON)
-@SuppressWarnings(Constant.WARNING_UNUSED)
 public class SurveyController {
 	// consumes = Constant.CONTENT_TYPE_JSON,
 

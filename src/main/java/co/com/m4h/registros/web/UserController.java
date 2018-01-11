@@ -1,6 +1,5 @@
 package co.com.m4h.registros.web;
 
-import java.sql.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 import co.com.m4h.registros.common.Constant;
 import co.com.m4h.registros.model.User;
 import co.com.m4h.registros.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by Jose Molina on 2/1/18.
  */
 @RestController
+@Slf4j
 @RequestMapping(value = "/users", produces = Constant.CONTENT_TYPE_JSON)
 public class UserController {
 	// consumes = Constant.CONTENT_TYPE_JSON,
@@ -61,7 +62,6 @@ public class UserController {
 
 		// if (u.isPresent())
 		// user.setCompany(u.get().getCompany());
-		user.setLastPasswordResetDate(new Date(System.currentTimeMillis()));
 
 		User persistedUser = userService.update(user);
 		return new ResponseEntity<>(persistedUser, HttpStatus.CREATED);
@@ -69,7 +69,12 @@ public class UserController {
 
 	@RequestMapping(value = "/{userId}", method = RequestMethod.DELETE)
 	public ResponseEntity<User> delete(@PathVariable(USER_ID_PARAM) Long userId) {
-		userService.delete(userId);
-		return new ResponseEntity<>(HttpStatus.ACCEPTED);
+		try {
+			userService.delete(userId);
+			return new ResponseEntity<>(HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			log.warn(e.getMessage());
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
+		}
 	}
 }
