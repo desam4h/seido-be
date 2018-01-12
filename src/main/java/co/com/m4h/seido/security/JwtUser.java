@@ -1,4 +1,4 @@
-package co.com.m4h.registros.security;
+package co.com.m4h.seido.security;
 
 import java.util.Collection;
 import java.util.Date;
@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import co.com.m4h.registros.model.Company;
+import co.com.m4h.seido.model.Company;
 
 public class JwtUser implements UserDetails {
 

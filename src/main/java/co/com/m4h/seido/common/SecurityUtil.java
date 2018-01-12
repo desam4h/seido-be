@@ -1,10 +1,10 @@
-package co.com.m4h.registros.common;
+package co.com.m4h.seido.common;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import co.com.m4h.registros.model.Company;
-import co.com.m4h.registros.security.JwtUser;
+import co.com.m4h.seido.model.Company;
+import co.com.m4h.seido.security.JwtUser;
 
 public final class SecurityUtil {
 

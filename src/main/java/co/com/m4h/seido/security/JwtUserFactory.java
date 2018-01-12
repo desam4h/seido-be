@@ -1,4 +1,4 @@
-package co.com.m4h.registros.security;
+package co.com.m4h.seido.security;
 
 import java.util.Arrays;
 import java.util.List;
@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import co.com.m4h.registros.model.User;
-import co.com.m4h.registros.model.security.Authority;
+import co.com.m4h.seido.model.User;
+import co.com.m4h.seido.model.security.Authority;
 
 public final class JwtUserFactory {
 

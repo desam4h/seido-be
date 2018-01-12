@@ -1,4 +1,4 @@
-package co.com.m4h.registros.service.impl;
+package co.com.m4h.seido.service.impl;
 
 import java.util.List;
 import java.util.Map;
@@ -8,14 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import co.com.m4h.registros.common.SurveyUtils;
-import co.com.m4h.registros.json.SurveyJs;
-import co.com.m4h.registros.model.Survey;
-import co.com.m4h.registros.model.SurveyState;
-import co.com.m4h.registros.model.SurveyStatistics;
-import co.com.m4h.registros.persistence.SurveyRepository;
-import co.com.m4h.registros.persistence.SurveyStatisticRepository;
-import co.com.m4h.registros.service.SurveyService;
+import co.com.m4h.seido.common.SurveyUtils;
+import co.com.m4h.seido.json.SurveyJs;
+import co.com.m4h.seido.model.Survey;
+import co.com.m4h.seido.model.SurveyState;
+import co.com.m4h.seido.model.SurveyStatistics;
+import co.com.m4h.seido.persistence.SurveyRepository;
+import co.com.m4h.seido.persistence.SurveyStatisticRepository;
+import co.com.m4h.seido.service.SurveyService;
 
 /**
  * Created by hernan on 7/2/17.

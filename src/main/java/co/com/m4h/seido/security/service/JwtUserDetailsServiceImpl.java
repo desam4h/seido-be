@@ -1,4 +1,4 @@
-package co.com.m4h.registros.security.service;
+package co.com.m4h.seido.security.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -6,9 +6,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import co.com.m4h.registros.model.User;
-import co.com.m4h.registros.persistence.UserRepository;
-import co.com.m4h.registros.security.JwtUserFactory;
+import co.com.m4h.seido.model.User;
+import co.com.m4h.seido.persistence.UserRepository;
+import co.com.m4h.seido.security.JwtUserFactory;
 
 @Service
 public class JwtUserDetailsServiceImpl implements UserDetailsService {

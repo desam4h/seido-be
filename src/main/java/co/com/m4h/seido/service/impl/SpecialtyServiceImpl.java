@@ -1,4 +1,4 @@
-package co.com.m4h.registros.service.impl;
+package co.com.m4h.seido.service.impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,10 +6,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import co.com.m4h.registros.common.SecurityUtil;
-import co.com.m4h.registros.model.Specialty;
-import co.com.m4h.registros.persistence.SpecialtyRepository;
-import co.com.m4h.registros.service.SpecialtyService;
+import co.com.m4h.seido.common.SecurityUtil;
+import co.com.m4h.seido.model.Specialty;
+import co.com.m4h.seido.persistence.SpecialtyRepository;
+import co.com.m4h.seido.service.SpecialtyService;
 
 /**
  * Created by hernan on 7/2/17.

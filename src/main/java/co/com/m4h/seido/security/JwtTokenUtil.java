@@ -1,4 +1,4 @@
-package co.com.m4h.registros.security;
+package co.com.m4h.seido.security;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -12,7 +12,7 @@ import org.springframework.mobile.device.Device;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import co.com.m4h.registros.common.TimeProvider;
+import co.com.m4h.seido.common.TimeProvider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

@@ -1,4 +1,4 @@
-package co.com.m4h.registros.common;
+package co.com.m4h.seido.common;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
-import co.com.m4h.registros.json.SurveyJs;
+import co.com.m4h.seido.json.SurveyJs;
 
 public class SurveyUtils {
 	/**

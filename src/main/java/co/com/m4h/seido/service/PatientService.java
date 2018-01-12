@@ -1,9 +1,9 @@
-package co.com.m4h.registros.service;
+package co.com.m4h.seido.service;
 
 import java.util.List;
 import java.util.Optional;
 
-import co.com.m4h.registros.model.Patient;
+import co.com.m4h.seido.model.Patient;
 
 /**
  * Created by hernan on 7/2/17.

@@ -1,4 +1,4 @@
-package co.com.m4h.registros.model;
+package co.com.m4h.seido.model;
 
 import java.util.Date;
 
@@ -11,7 +11,7 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import co.com.m4h.registros.model.security.Authority;
+import co.com.m4h.seido.model.security.Authority;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

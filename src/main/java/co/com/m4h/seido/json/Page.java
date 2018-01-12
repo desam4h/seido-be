@@ -1,4 +1,4 @@
-package co.com.m4h.registros.json;
+package co.com.m4h.seido.json;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;

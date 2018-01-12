@@ -1,4 +1,4 @@
-package co.com.m4h.registros.model;
+package co.com.m4h.seido.model;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;

@@ -1,4 +1,4 @@
-package co.com.m4h.registros.web;
+package co.com.m4h.seido.web;
 
 import java.util.List;
 
@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import co.com.m4h.registros.common.Constant;
-import co.com.m4h.registros.model.Company;
-import co.com.m4h.registros.service.CompanyService;
+import co.com.m4h.seido.common.Constant;
+import co.com.m4h.seido.model.Company;
+import co.com.m4h.seido.service.CompanyService;
 import lombok.extern.slf4j.Slf4j;
 
 /**

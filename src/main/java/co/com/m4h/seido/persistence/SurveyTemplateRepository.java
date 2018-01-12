@@ -1,4 +1,4 @@
-package co.com.m4h.registros.persistence;
+package co.com.m4h.seido.persistence;
 
 import java.util.List;
 
@@ -7,8 +7,8 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import co.com.m4h.registros.model.SurveyTemplate;
-import co.com.m4h.registros.model.SurveyType;
+import co.com.m4h.seido.model.SurveyTemplate;
+import co.com.m4h.seido.model.SurveyType;
 
 @Repository
 public interface SurveyTemplateRepository extends PagingAndSortingRepository<SurveyTemplate, Long> {

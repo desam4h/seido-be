@@ -1,11 +1,11 @@
-package co.com.m4h.registros.persistence;
+package co.com.m4h.seido.persistence;
 
 import java.util.List;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
-import co.com.m4h.registros.model.Specialty;
+import co.com.m4h.seido.model.Specialty;
 
 @Repository
 public interface SpecialtyRepository extends PagingAndSortingRepository<Specialty, Long> {

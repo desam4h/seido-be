@@ -1,4 +1,4 @@
-package co.com.m4h.registros.service.impl;
+package co.com.m4h.seido.service.impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,15 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import co.com.m4h.registros.model.Event;
-import co.com.m4h.registros.model.Patient;
-import co.com.m4h.registros.model.Survey;
-import co.com.m4h.registros.model.SurveyType;
-import co.com.m4h.registros.persistence.EventRepository;
-import co.com.m4h.registros.service.EventService;
-import co.com.m4h.registros.service.PatientService;
-import co.com.m4h.registros.service.SurveyService;
-import co.com.m4h.registros.service.SurveyTemplateService;
+import co.com.m4h.seido.model.Event;
+import co.com.m4h.seido.model.Patient;
+import co.com.m4h.seido.model.Survey;
+import co.com.m4h.seido.model.SurveyType;
+import co.com.m4h.seido.persistence.EventRepository;
+import co.com.m4h.seido.service.EventService;
+import co.com.m4h.seido.service.PatientService;
+import co.com.m4h.seido.service.SurveyService;
+import co.com.m4h.seido.service.SurveyTemplateService;
 
 /**
  * Created by hernan on 7/2/17.

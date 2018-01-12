@@ -1,4 +1,4 @@
-package co.com.m4h.registros.common;
+package co.com.m4h.seido.common;
 
 /**
  * Created by hernan on 7/2/17.

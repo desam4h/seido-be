@@ -1,4 +1,4 @@
-package co.com.m4h.registros.common;
+package co.com.m4h.seido.common;
 
 import java.sql.Date;
 import java.time.LocalDate;

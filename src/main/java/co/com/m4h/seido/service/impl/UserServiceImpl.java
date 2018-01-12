@@ -1,4 +1,4 @@
-package co.com.m4h.registros.service.impl;
+package co.com.m4h.seido.service.impl;
 
 import java.sql.Date;
 import java.util.List;
@@ -11,10 +11,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import co.com.m4h.registros.common.SecurityUtil;
-import co.com.m4h.registros.model.User;
-import co.com.m4h.registros.persistence.UserRepository;
-import co.com.m4h.registros.service.UserService;
+import co.com.m4h.seido.common.SecurityUtil;
+import co.com.m4h.seido.model.User;
+import co.com.m4h.seido.persistence.UserRepository;
+import co.com.m4h.seido.service.UserService;
 
 /**
  * Created by Jose Molina on 2/1/18.

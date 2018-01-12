@@ -1,4 +1,4 @@
-package co.com.m4h.registros.model;
+package co.com.m4h.seido.model;
 
 import java.time.LocalDate;
 
@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
-import co.com.m4h.registros.common.Constant;
+import co.com.m4h.seido.common.Constant;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

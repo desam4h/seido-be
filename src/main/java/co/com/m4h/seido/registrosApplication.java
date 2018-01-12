@@ -1,4 +1,4 @@
-package co.com.m4h.registros;
+package co.com.m4h.seido;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

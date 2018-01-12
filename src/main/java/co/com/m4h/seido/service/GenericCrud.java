@@ -1,10 +1,10 @@
-package co.com.m4h.registros.service;
+package co.com.m4h.seido.service;
 
 import java.util.Optional;
 
 import org.apache.commons.lang.NotImplementedException;
 
-import co.com.m4h.registros.model.AbstractEntity;
+import co.com.m4h.seido.model.AbstractEntity;
 
 public interface GenericCrud<T extends AbstractEntity> {
 	default T save(T entity) {

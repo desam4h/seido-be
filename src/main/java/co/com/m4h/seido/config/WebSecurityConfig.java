@@ -1,4 +1,4 @@
-package co.com.m4h.registros.config;
+package co.com.m4h.seido.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -20,8 +20,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.google.common.collect.ImmutableList;
 
-import co.com.m4h.registros.security.JwtAuthenticationEntryPoint;
-import co.com.m4h.registros.security.JwtAuthenticationTokenFilter;
+import co.com.m4h.seido.security.JwtAuthenticationEntryPoint;
+import co.com.m4h.seido.security.JwtAuthenticationTokenFilter;
 
 @Configuration
 @EnableWebSecurity

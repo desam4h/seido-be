@@ -1,8 +1,8 @@
-package co.com.m4h.registros.service;
+package co.com.m4h.seido.service;
 
 import java.util.List;
 
-import co.com.m4h.registros.model.Event;
+import co.com.m4h.seido.model.Event;
 
 /**
  * Created by hernan on 7/2/17.

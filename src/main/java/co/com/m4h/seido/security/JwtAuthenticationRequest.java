@@ -1,4 +1,4 @@
-package co.com.m4h.registros.security;
+package co.com.m4h.seido.security;
 
 import java.io.Serializable;
 

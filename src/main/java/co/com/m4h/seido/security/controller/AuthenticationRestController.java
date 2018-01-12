@@ -1,4 +1,4 @@
-package co.com.m4h.registros.security.controller;
+package co.com.m4h.seido.security.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import co.com.m4h.registros.security.JwtAuthenticationRequest;
-import co.com.m4h.registros.security.JwtTokenUtil;
-import co.com.m4h.registros.security.JwtUser;
-import co.com.m4h.registros.security.service.JwtAuthenticationResponse;
+import co.com.m4h.seido.security.JwtAuthenticationRequest;
+import co.com.m4h.seido.security.JwtTokenUtil;
+import co.com.m4h.seido.security.JwtUser;
+import co.com.m4h.seido.security.service.JwtAuthenticationResponse;
 
 @RestController
 public class AuthenticationRestController {
