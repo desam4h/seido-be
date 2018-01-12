@@ -13,7 +13,7 @@ spring:
     
   datasource:
     platform: postgres
-    url: jdbc:postgresql://localhost:5432/registros
+    url: jdbc:postgresql://localhost:5432/seido
     username: postgres
     password: postgres
     driverClassName: org.postgresql.Driver
