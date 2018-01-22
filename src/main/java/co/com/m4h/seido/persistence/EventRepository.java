@@ -9,7 +9,9 @@ import co.com.m4h.seido.model.Event;
 
 @Repository
 public interface EventRepository extends PagingAndSortingRepository<Event, Long> {
-	List<Event> findAllByPatientId(Long patientId);
+	List<Event> findAllByOrderByPatientIdAsc(Long patientId);
 
 	void deleteAllByPatientId(Long patientId);
+
+	Event findOneByPatientIdAndLoadedId(Long patientId, String loadedId);
 }

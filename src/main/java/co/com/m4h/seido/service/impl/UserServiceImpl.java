@@ -28,6 +28,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	@Override
 	public User save(User user) {
+		user.setUsername(user.getUsername().toLowerCase());
 		user.setLastPasswordResetDate(new Date(System.currentTimeMillis()));
 
 		PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -39,7 +40,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User update(User user) {
+		user.setUsername(user.getUsername().toLowerCase());
 		user.setLastPasswordResetDate(new Date(System.currentTimeMillis()));
+
 		User savedUser = userRepository.findOneByUsername(user.getUsername());
 
 		if (!savedUser.getPassword().equals(user.getPassword())) {
@@ -72,6 +75,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Optional<User> findByUsername(String username) {
+		username = username.toLowerCase();
 		String role = SecurityUtil.getRole();
 
 		if (role.equals("ROLE_ROOT")) {

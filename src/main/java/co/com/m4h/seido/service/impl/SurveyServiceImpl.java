@@ -1,8 +1,12 @@
 package co.com.m4h.seido.service.impl;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,17 +17,26 @@ import co.com.m4h.seido.json.SurveyJs;
 import co.com.m4h.seido.model.Survey;
 import co.com.m4h.seido.model.SurveyState;
 import co.com.m4h.seido.model.SurveyStatistics;
+import co.com.m4h.seido.model.SurveyTemplate;
 import co.com.m4h.seido.persistence.SurveyRepository;
 import co.com.m4h.seido.persistence.SurveyStatisticRepository;
+import co.com.m4h.seido.persistence.SurveyTemplateRepository;
 import co.com.m4h.seido.service.SurveyService;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by hernan on 7/2/17.
  */
 @Service
+@Slf4j
 public class SurveyServiceImpl implements SurveyService {
+
+	@Autowired
+	private SurveyTemplateRepository surveyTemplateRepository;
+
 	@Autowired
 	private SurveyRepository surveyRepository;
+
 	@Autowired
 	private SurveyStatisticRepository statisticRepository;
 
@@ -77,6 +90,16 @@ public class SurveyServiceImpl implements SurveyService {
 	}
 
 	@Override
+	public Optional<Survey> findByEventIdAndTemplateId(Long eventId, Long templateId) {
+		return Optional.ofNullable(surveyRepository.findByEventIdAndTemplateId(eventId, templateId));
+	}
+
+	@Override
+	public Optional<Survey> findByPatientIdAndTemplateId(Long patientId, Long templateId) {
+		return Optional.ofNullable(surveyRepository.findByPatientIdAndTemplateId(patientId, templateId));
+	}
+
+	@Override
 	public void delete(Long surveyId) {
 		surveyRepository.delete(surveyId);
 	}
@@ -93,5 +116,54 @@ public class SurveyServiceImpl implements SurveyService {
 	public void deleteAllByPatientId(Long patientId) {
 		statisticRepository.deleteAllByPatientId(patientId);
 		surveyRepository.deleteAllByPatientId(patientId);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public String getStatistics(Long templateId) {
+		StringBuilder csvInfo = new StringBuilder();
+		Set<String> questionNames = getTemplateQuestionNames(templateId);
+		String NEW_LINE = "\n";
+		csvInfo.append(transformSurveyAnswersToCSV(questionNames, new HashMap<>(), true));
+		csvInfo.append(NEW_LINE);
+
+		try (Stream<Survey> surveyStream = surveyRepository.findAllByTemplateId(templateId)) {
+			surveyStream.map(Survey::getSurveyAnswers).map(SurveyUtils::parseSurveyAnswers)
+					.map(surveyAnswersMap -> transformSurveyAnswersToCSV(questionNames, surveyAnswersMap, false))
+					.forEach(surveyInfo -> {
+						csvInfo.append(surveyInfo);
+						csvInfo.append(NEW_LINE);
+					});
+		} catch (Exception e) {
+			log.error("::: Error transforming surveys to CSV format ", e);
+		}
+
+		return csvInfo.toString();
+	}
+
+	/**
+	 * Gets the question names from the template model.
+	 * 
+	 * @param templateId
+	 *            Template identifier
+	 * @return Set of names in orden from the template model.
+	 */
+	private Set<String> getTemplateQuestionNames(Long templateId) {
+		SurveyTemplate template = surveyTemplateRepository.findOne(templateId);
+		SurveyJs surveyJsModel = SurveyUtils.parseSurveyModel(template.getJsSurvey());
+		return SurveyUtils.getQuestionNamesFromSurveyModel(surveyJsModel);
+	}
+
+	/**
+	 *
+	 * @param questionNames
+	 * @param surveyAnswers
+	 * @return
+	 */
+	private static String transformSurveyAnswersToCSV(Set<String> questionNames, Map<String, Object> surveyAnswers,
+			boolean withHeaders) {
+		Map<String, Object> orderedAnswers = new LinkedHashMap<>();
+		questionNames.stream().forEach(name -> orderedAnswers.put(name, surveyAnswers.get(name)));
+		return SurveyUtils.formatAnswersAsCSV(orderedAnswers, withHeaders);
 	}
 }

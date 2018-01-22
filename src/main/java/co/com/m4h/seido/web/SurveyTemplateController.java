@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.com.m4h.seido.common.Constant;
 import co.com.m4h.seido.model.SurveyTemplate;
+import co.com.m4h.seido.security.service.JwtMessageResponse;
+import co.com.m4h.seido.service.SurveyService;
 import co.com.m4h.seido.service.SurveyTemplateService;
+import co.com.m4h.seido.service.UploaderService;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -27,9 +30,16 @@ public class SurveyTemplateController {
 	// consumes = Constant.CONTENT_TYPE_JSON,
 
 	private static final String SPECIALTY_ID_PARAM = "specialtyId";
+	private static final String TEMPLATE_ID = "templateId";
 
 	@Autowired
 	private SurveyTemplateService surveyTemplateService;
+
+	@Autowired
+	private SurveyService surveyService;
+
+	@Autowired
+	private UploaderService uploaderService;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<SurveyTemplate>> findAll(@PathVariable(SPECIALTY_ID_PARAM) Long specialtyId) {
@@ -65,5 +75,21 @@ public class SurveyTemplateController {
 			log.warn(e.getMessage());
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
+	}
+
+	@RequestMapping(value = "/{templateId}/statistics", method = RequestMethod.GET)
+	public ResponseEntity<JwtMessageResponse> buildStatisticsByTemplate(@PathVariable(TEMPLATE_ID) Long templateId) {
+		String statisticsAsCsv = surveyService.getStatistics(templateId);
+		JwtMessageResponse res = new JwtMessageResponse(statisticsAsCsv);
+		return new ResponseEntity<>(res, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/{templateId}/upload", method = RequestMethod.POST)
+	public ResponseEntity<String> uploadInfoByTemplate(@PathVariable(TEMPLATE_ID) Long templateId,
+			@RequestBody String csvInfo) {
+		System.out.println("::: csvInfo = " + csvInfo);
+		int itemsUploaded = uploaderService.uploadInfo(templateId, csvInfo);
+		String response = "{\"uploadedRows\":%s}";
+		return new ResponseEntity<>(String.format(response, Integer.toString(itemsUploaded)), HttpStatus.OK);
 	}
 }

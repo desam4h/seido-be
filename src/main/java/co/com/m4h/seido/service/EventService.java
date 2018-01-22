@@ -1,6 +1,7 @@
 package co.com.m4h.seido.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import co.com.m4h.seido.model.Event;
 
@@ -15,4 +16,6 @@ public interface EventService extends GenericCrud<Event> {
 	Event update(Long patientId, Event event);
 
 	void deleteAllByPatientId(Long patientId);
+
+	Optional<Event> findByLoadedId(Long patientId, String loadedId);
 }

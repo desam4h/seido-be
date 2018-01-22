@@ -44,12 +44,13 @@ public class AuthenticationRestController {
 
 		// Perform the security
 		final Authentication authentication = authenticationManager
-				.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
+				.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername().toLowerCase(),
 						authenticationRequest.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		// Reload password post-security so we can generate token
-		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+		final UserDetails userDetails = userDetailsService
+				.loadUserByUsername(authenticationRequest.getUsername().toLowerCase());
 		final String token = jwtTokenUtil.generateToken(userDetails, device);
 
 		JwtUser user = (JwtUser) userDetails;
