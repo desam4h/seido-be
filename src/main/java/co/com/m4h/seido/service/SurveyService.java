@@ -1,5 +1,6 @@
 package co.com.m4h.seido.service;
 
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,4 +28,6 @@ public interface SurveyService extends GenericCrud<Survey> {
 	 * @return Lines in csv format from the survey responses.
 	 */
 	String getStatistics(Long templateId);
+
+	File getExcel(Long templateId);
 }

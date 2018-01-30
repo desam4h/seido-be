@@ -1,13 +1,33 @@
 package co.com.m4h.seido.service.impl;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.codec.binary.Hex;
+import org.apache.poi.hssf.usermodel.HeaderFooter;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.Footer;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFPrintSetup;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -141,6 +161,184 @@ public class SurveyServiceImpl implements SurveyService {
 		return csvInfo.toString();
 	}
 
+	@Override
+	@Transactional(readOnly = true)
+	public File getExcel(Long templateId) {
+		try {
+
+			SurveyTemplate template = surveyTemplateRepository.findOne(templateId);
+			Set<String> questionNames = getTemplateQuestionNames(templateId);
+
+			////////////////////
+			Stream<Survey> surveyStream = surveyRepository.findAllByTemplateId(templateId);
+
+			Stream<Map<String, Object>> answersStream = surveyStream
+					.filter(s -> !s.getState().equals(SurveyState.NOT_STARTED)).map(Survey::getSurveyAnswers)
+					.map(SurveyUtils::parseSurveyAnswers);
+
+			List<Map<String, Object>> answers = answersStream.collect(Collectors.toList());
+
+			System.out.println("::: " + answers.size());
+
+			////////////////////
+
+			int maxCol = questionNames.size() - 1;
+
+			XSSFWorkbook wb = new XSSFWorkbook();
+			XSSFSheet sheet = wb.createSheet("Estadisticas");
+
+			Footer footer = sheet.getFooter();
+			footer.setRight("Pág. " + HeaderFooter.page() + " de " + HeaderFooter.numPages());
+
+			sheet.getPrintSetup().setPaperSize(XSSFPrintSetup.LETTER_PAPERSIZE);
+			sheet.getPrintSetup().setLandscape(false);
+			sheet.getPrintSetup().setFitWidth((short) 1);
+			// sheet.setFitToPage( true );
+			sheet.setAutobreaks(true);
+
+			XSSFFont font = wb.createFont();
+			font.setFontHeightInPoints((short) 11);
+			font.setFontName("Arial");
+			font.setColor(IndexedColors.AUTOMATIC.getIndex());
+			font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+			font.setItalic(false);
+
+			XSSFCellStyle boldStyle = wb.createCellStyle();
+			boldStyle.setFont(font);
+			boldStyle.setAlignment(XSSFCellStyle.ALIGN_CENTER);
+
+			for (int i = 0; i < 5; i++)
+				sheet.addMergedRegion(new CellRangeAddress(i, i, 0, maxCol));
+
+			int rowActual = 0;
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+			XSSFCell celda = null;
+
+			// Títulos de Archivo
+			celda = sheet.createRow(rowActual++).createCell(0);
+			celda.setCellValue("SEIDO");
+			celda.setCellStyle(boldStyle);
+
+			celda = sheet.createRow(rowActual++).createCell(0);
+			celda.setCellValue(template.getSpecialty().getCompany().getName().toUpperCase());
+			celda.setCellStyle(boldStyle);
+
+			celda = sheet.createRow(rowActual++).createCell(0);
+			celda.setCellValue(template.getSpecialty().getName().toUpperCase());
+			celda.setCellStyle(boldStyle);
+
+			celda = sheet.createRow(rowActual++).createCell(0);
+			celda.setCellValue(template.getName().toUpperCase());
+			celda.setCellStyle(boldStyle);
+
+			celda = sheet.createRow(rowActual++).createCell(0);
+			celda.setCellValue("GENERADO EL " + sdf.format(new Date(System.currentTimeMillis())));
+			celda.setCellStyle(boldStyle);
+
+			// Repite la fila de títulos y una fila vacía debajo en todas las hojas al
+			// imprimir
+			int filaTitulos = ++rowActual;
+			String filasRepetir = String.valueOf(1) + ":" + String.valueOf(filaTitulos + 2);
+			sheet.setRepeatingRows(CellRangeAddress.valueOf(filasRepetir));
+
+			// Títulos de Columnas
+			int i = 0;
+			for (String question : questionNames) {
+				if (i == 0)
+					celda = sheet.createRow(rowActual).createCell(i++);
+				else
+					celda = sheet.getRow(rowActual).createCell(i++);
+
+				celda.setCellValue("  " + question + "  ");
+				celda.setCellStyle(boldStyle);
+			}
+
+			rowActual += 2;
+
+			Iterator<Map<String, Object>> iterator = answers.iterator();
+
+			while (iterator.hasNext()) {
+				Map<String, Object> answer = iterator.next();
+				XSSFRow row = sheet.createRow(rowActual++);
+
+				i = 0;
+				for (String question : questionNames) {
+					String str = answer.get(question) == null ? "" : answer.get(question).toString();
+					row.createCell(i++).setCellValue(str);
+				}
+			}
+
+			for (i = 0; i <= maxCol; i++)
+				sheet.autoSizeColumn(i);
+
+			// ////////////////// Protección del archivo para edición ////////////////////
+
+			String password = getCadenaHexaAleatoria(4);
+			byte[] pwdBytes = null;
+
+			pwdBytes = Hex.decodeHex(password.toCharArray());
+
+			sheet.lockDeleteColumns();
+			sheet.lockDeleteRows();
+			sheet.lockFormatCells();
+			// sheet.lockFormatColumns();
+			// sheet.lockFormatRows();
+			sheet.lockInsertColumns();
+			sheet.lockInsertRows();
+			sheet.getCTWorksheet().getSheetProtection().setPassword(pwdBytes);
+
+			sheet.enableLocking();
+			wb.lockStructure();
+
+			// //////////////////////////////////////////////////////////////////////////
+
+			File file = new File("file" + System.currentTimeMillis() + ".xlsx");
+			FileOutputStream fichero = new FileOutputStream(file);
+			wb.write(fichero);
+
+			fichero.close();
+
+			return file;
+
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+
+		return null;
+
+		// // Se crea el libro
+		// HSSFWorkbook libro = new HSSFWorkbook();
+		//
+		// // Se crea una hoja dentro del libro
+		// HSSFSheet hoja = libro.createSheet();
+		//
+		// // Se crea una fila dentro de la hoja
+		// HSSFRow fila = hoja.createRow(0);
+		//
+		// // Se crea una celda dentro de la fila
+		// HSSFCell celda = fila.createCell((short) 0);
+		//
+		// // Se crea el contenido de la celda y se mete en ella.
+		// HSSFRichTextString texto = new HSSFRichTextString("hola mundo prueba");
+		// celda.setCellValue(texto);
+		//
+		// // Se salva el libro.
+		// try {
+		// File file = new File("holamundo.xls");
+		// FileOutputStream elFichero = new FileOutputStream(file);
+		// libro.write(elFichero);
+		//
+		// libro.close();
+		// elFichero.close();
+		//
+		// return file;
+		//
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
+		// return null;
+	}
+
 	/**
 	 * Gets the question names from the template model.
 	 * 
@@ -165,5 +363,22 @@ public class SurveyServiceImpl implements SurveyService {
 		Map<String, Object> orderedAnswers = new LinkedHashMap<>();
 		questionNames.stream().forEach(name -> orderedAnswers.put(name, surveyAnswers.get(name)));
 		return SurveyUtils.formatAnswersAsCSV(orderedAnswers, withHeaders);
+	}
+
+	private static String getCadenaHexaAleatoria(int longitud) {
+		String cadenaAleatoria = "";
+		long milis = new java.util.GregorianCalendar().getTimeInMillis();
+		Random r = new Random(milis);
+		int i = 0;
+
+		while (i < longitud) {
+			char c = (char) r.nextInt(255);
+			if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F')) {
+				cadenaAleatoria += c;
+				i++;
+			}
+		}
+
+		return cadenaAleatoria;
 	}
 }

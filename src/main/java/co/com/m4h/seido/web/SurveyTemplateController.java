@@ -1,6 +1,12 @@
 package co.com.m4h.seido.web;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -82,6 +88,32 @@ public class SurveyTemplateController {
 		String statisticsAsCsv = surveyService.getStatistics(templateId);
 		JwtMessageResponse res = new JwtMessageResponse(statisticsAsCsv);
 		return new ResponseEntity<>(res, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/{templateId}/excel", method = RequestMethod.GET)
+	public void buildExcel(@PathVariable(TEMPLATE_ID) Long templateId, HttpServletResponse response) {
+
+		try {
+			File file = surveyService.getExcel(templateId);
+
+			response.addHeader("Content-Disposition", "attachment; filename=" + file.getName());
+			response.setContentType(Files.probeContentType(file.toPath()));
+			response.setContentLengthLong(file.length());
+
+			FileInputStream fis = new FileInputStream(file);
+			int c;
+			while ((c = fis.read()) > -1) {
+				response.getOutputStream().write(c);
+			}
+
+			response.flushBuffer();
+
+			fis.close();
+			file.delete();
+		} catch (IOException e) {
+			System.out.println("::::: error: " + e.getMessage());
+		}
+
 	}
 
 	@RequestMapping(value = "/{templateId}/upload", method = RequestMethod.POST)
