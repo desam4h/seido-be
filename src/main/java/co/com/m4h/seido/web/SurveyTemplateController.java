@@ -116,6 +116,32 @@ public class SurveyTemplateController {
 
 	}
 
+	@RequestMapping(value = "/excelGeneral", method = RequestMethod.GET)
+	public void buildExcelGeneral(@PathVariable(SPECIALTY_ID_PARAM) Long specialtyId, HttpServletResponse response) {
+
+		try {
+			File file = surveyService.getExcelGeneral(specialtyId);
+
+			response.addHeader("Content-Disposition", "attachment; filename=" + file.getName());
+			response.setContentType(Files.probeContentType(file.toPath()));
+			response.setContentLengthLong(file.length());
+
+			FileInputStream fis = new FileInputStream(file);
+			int c;
+			while ((c = fis.read()) > -1) {
+				response.getOutputStream().write(c);
+			}
+
+			response.flushBuffer();
+
+			fis.close();
+			file.delete();
+		} catch (IOException e) {
+			System.out.println("::::: error: " + e.getMessage());
+		}
+
+	}
+
 	@RequestMapping(value = "/{templateId}/upload", method = RequestMethod.POST)
 	public ResponseEntity<String> uploadInfoByTemplate(@PathVariable(TEMPLATE_ID) Long templateId,
 			@RequestBody String csvInfo) {

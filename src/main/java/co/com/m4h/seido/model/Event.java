@@ -25,15 +25,20 @@ import lombok.ToString;
 @ToString
 @Entity
 public class Event extends AbstractEntity {
+
 	@JsonFormat(pattern = Constant.ENTITY_GENERIC_DATE_PATTERN)
 	@JsonSerialize(using = LocalDateSerializer.class)
 	@JsonDeserialize(using = LocalDateDeserializer.class)
 	private LocalDate createdDate;
+
 	@ManyToOne
 	private Specialty specialty;
+
 	@ManyToOne
 	@JsonIgnore
 	private Patient patient;
+
 	private String name;
+
 	private String loadedId;
 }

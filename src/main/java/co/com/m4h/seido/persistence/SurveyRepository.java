@@ -17,6 +17,7 @@ import co.com.m4h.seido.model.Survey;
 
 @Repository
 public interface SurveyRepository extends PagingAndSortingRepository<Survey, Long> {
+
 	@Query("SELECT s FROM Survey s WHERE s.patient.id = :patientId ORDER BY s.id ASC")
 	List<Survey> findAllByPatientId(@Param("patientId") Long patientId);
 

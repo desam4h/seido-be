@@ -30,4 +30,6 @@ public interface SurveyService extends GenericCrud<Survey> {
 	String getStatistics(Long templateId);
 
 	File getExcel(Long templateId);
+
+	File getExcelGeneral(Long specialtyId);
 }

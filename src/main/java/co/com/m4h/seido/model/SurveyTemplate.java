@@ -29,4 +29,6 @@ public class SurveyTemplate extends AbstractEntity {
 
 	@ManyToOne
 	private Specialty specialty;
+
+	private Integer order_id;
 }
