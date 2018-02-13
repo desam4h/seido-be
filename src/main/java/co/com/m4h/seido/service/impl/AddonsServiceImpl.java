@@ -69,7 +69,7 @@ public class AddonsServiceImpl implements AddonsService {
 						if (email == null)
 							email = "";
 
-						res.add(new Control6Meses(p.getId(), p.getFirstName() + p.getLastName(), surgeryDateStr,
+						res.add(new Control6Meses(p.getId(), p.getFirstName() + " " + p.getLastName(), surgeryDateStr,
 								email));
 					}
 				}
