@@ -38,4 +38,7 @@ public interface SurveyRepository extends PagingAndSortingRepository<Survey, Lon
 	Survey findByEventIdAndTemplateId(Long eventId, Long templateId);
 
 	Survey findByPatientIdAndTemplateId(Long patientId, Long templateId);
+
+	@Query("SELECT s FROM Survey s WHERE s.template.id = :templateId AND (s.state = 'STARTED' OR s.state = 'FINISHED')")
+	Stream<Survey> findByTemplateIdStartedAndFinished(@Param("templateId") Long templateId);
 }
