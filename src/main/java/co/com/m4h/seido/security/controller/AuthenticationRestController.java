@@ -1,5 +1,8 @@
 package co.com.m4h.seido.security.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.com.m4h.seido.model.Addon;
+import co.com.m4h.seido.model.security.AuthorityName;
 import co.com.m4h.seido.security.JwtAuthenticationRequest;
 import co.com.m4h.seido.security.JwtTokenUtil;
 import co.com.m4h.seido.security.JwtUser;
@@ -57,9 +62,15 @@ public class AuthenticationRestController {
 
 		String role = user.getAuthorities().iterator().next().getAuthority();
 
+		List<Addon> addons = new ArrayList<>();
+		if (role.equals(AuthorityName.ROLE_ADMIN.name()))
+			if (user.getCompany().getAddons() != null)
+				for (Addon addon : user.getCompany().getAddons())
+					addons.add(addon);
+
 		// Return the token
 		return ResponseEntity.ok(new JwtAuthenticationResponse(user.getId(), user.getUsername(), user.getFirstname(),
-				user.getLastname(), role, user.getCompany().getId(), token));
+				user.getLastname(), role, user.getCompany().getId(), token, addons));
 	}
 
 	@RequestMapping(value = "${jwt.route.authentication.refresh}", method = RequestMethod.GET)
@@ -72,8 +83,15 @@ public class AuthenticationRestController {
 
 		if (jwtTokenUtil.canTokenBeRefreshed(token, user.getLastPasswordResetDate())) {
 			String refreshedToken = jwtTokenUtil.refreshToken(token);
+
+			List<Addon> addons = new ArrayList<>();
+			if (role.equals(AuthorityName.ROLE_ADMIN.name()))
+				if (user.getCompany().getAddons() != null)
+					for (Addon addon : user.getCompany().getAddons())
+						addons.add(addon);
+
 			return ResponseEntity.ok(new JwtAuthenticationResponse(user.getId(), user.getUsername(),
-					user.getFirstname(), user.getLastname(), role, user.getCompany().getId(), refreshedToken));
+					user.getFirstname(), user.getLastname(), role, user.getCompany().getId(), refreshedToken, addons));
 		} else {
 			return ResponseEntity.badRequest().body(null);
 		}

@@ -1,6 +1,9 @@
 package co.com.m4h.seido.security.service;
 
 import java.io.Serializable;
+import java.util.List;
+
+import co.com.m4h.seido.model.Addon;
 
 public class JwtAuthenticationResponse implements Serializable {
 
@@ -13,9 +16,10 @@ public class JwtAuthenticationResponse implements Serializable {
 	private final String role;
 	private final Long companyid;
 	private final String token;
+	private final List<Addon> addons;
 
 	public JwtAuthenticationResponse(Long id, String userName, String firstName, String lastName, String role,
-			Long companyid, String token) {
+			Long companyid, String token, List<Addon> addons) {
 		this.id = id;
 		this.userName = userName;
 		this.firstName = firstName;
@@ -23,7 +27,7 @@ public class JwtAuthenticationResponse implements Serializable {
 		this.role = role;
 		this.companyid = companyid;
 		this.token = token;
-
+		this.addons = addons;
 	}
 
 	public Long getId() {
@@ -52,5 +56,9 @@ public class JwtAuthenticationResponse implements Serializable {
 
 	public String getToken() {
 		return this.token;
+	}
+
+	public List<Addon> getAddons() {
+		return this.addons;
 	}
 }

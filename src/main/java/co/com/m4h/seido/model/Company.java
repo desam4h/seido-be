@@ -1,10 +1,13 @@
 package co.com.m4h.seido.model;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -31,6 +34,10 @@ public class Company extends AbstractEntity {
 	private LocalDate createdDate;
 
 	private String nit;
+
+	@OneToMany(mappedBy = "company")
+	@JsonIgnore
+	private List<Addon> addons;
 
 	public Company() {
 	}
