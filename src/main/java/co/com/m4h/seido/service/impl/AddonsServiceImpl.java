@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.poi.hssf.usermodel.HeaderFooter;
@@ -48,6 +46,8 @@ public class AddonsServiceImpl implements AddonsService {
 
 	private static final Long TEMPLATE_CX_ID = 94L;
 
+	private static final Long TEMPLATE_CONTROL_6_ID = 96L;
+
 	private static final String QUESTION_NAME_CX_DATE = "surgeryDate";
 
 	private static final Long TEMPLATE_GENERAL_ID = 38L;
@@ -66,8 +66,11 @@ public class AddonsServiceImpl implements AddonsService {
 
 		try {
 
-			Stream<Survey> surveyStream = surveyRepository.findByTemplateIdStartedAndFinished(TEMPLATE_CX_ID);
-			List<Survey> surveys = surveyStream.collect(Collectors.toList());
+			// Stream<Survey> surveyStream =
+			// surveyRepository.findByTemplateIdStartedAndFinished(TEMPLATE_CX_ID);
+			// List<Survey> surveys = surveyStream.collect(Collectors.toList());
+
+			List<Survey> surveys = surveyRepository.findSurveysToControl6(TEMPLATE_CX_ID, TEMPLATE_CONTROL_6_ID);
 
 			for (Survey survey : surveys) {
 
@@ -87,8 +90,10 @@ public class AddonsServiceImpl implements AddonsService {
 						if (email == null)
 							email = "";
 
-						res.add(new Control6Meses(p.getId(), p.getFirstName() + " " + p.getLastName(), surgeryDateStr,
-								email));
+						res.add(new Control6Meses(p.getId(),
+								p.getFirstName() == null ? ""
+										: p.getFirstName() + " " + p.getLastName() == null ? "" : p.getLastName(),
+								surgeryDateStr, email));
 					}
 				}
 

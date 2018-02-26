@@ -2,6 +2,7 @@ package co.com.m4h.seido.service.impl;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -10,7 +11,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.codec.binary.Hex;
@@ -174,6 +174,7 @@ public class SurveyServiceImpl implements SurveyService {
 		return csvInfo.toString();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional(readOnly = true)
 	public File getExcel(Long templateId) {
@@ -185,11 +186,25 @@ public class SurveyServiceImpl implements SurveyService {
 			////////////////////
 			Stream<Survey> surveyStream = surveyRepository.findAllByTemplateId(templateId);
 
-			Stream<Map<String, Object>> answersStream = surveyStream
-					.filter(s -> !s.getState().equals(SurveyState.NOT_STARTED)).map(Survey::getSurveyAnswers)
-					.map(SurveyUtils::parseSurveyAnswers);
+			// Stream<Map<String, Object>> answersStream = surveyStream
+			// .filter(s ->
+			// !s.getState().equals(SurveyState.NOT_STARTED)).map(Survey::getSurveyAnswers)
+			// .map(SurveyUtils::parseSurveyAnswers);
+			//
+			// List<Map<String, Object>> answers =
+			// answersStream.collect(Collectors.toList());
 
-			List<Map<String, Object>> answers = answersStream.collect(Collectors.toList());
+			surveyStream = surveyStream.filter(s -> !s.getState().equals(SurveyState.NOT_STARTED));
+			List<Map<String, Object>> patientAnswers = new ArrayList<>();
+
+			Iterator<Survey> it = surveyStream.iterator();
+			while (it.hasNext()) {
+				Survey s = it.next();
+
+				Map<String, Object> map = new HashMap<>();
+				map.put(s.getPatient().getId().toString(), SurveyUtils.parseSurveyAnswers(s.getSurveyAnswers()));
+				patientAnswers.add(map);
+			}
 
 			////////////////////
 
@@ -255,29 +270,35 @@ public class SurveyServiceImpl implements SurveyService {
 			// sheet.setRepeatingRows(CellRangeAddress.valueOf(filasRepetir));
 
 			// Títulos de Columnas
-			int i = 0;
-			for (String question : questionNames) {
-				if (i == 0)
-					celda = sheet.createRow(rowActual).createCell(i++);
-				else
-					celda = sheet.getRow(rowActual).createCell(i++);
+			celda = sheet.createRow(rowActual).createCell(0);
+			celda.setCellValue("  ID Paciente  ");
+			celda.setCellStyle(boldStyle);
 
+			int i = 1;
+			for (String question : questionNames) {
+				celda = sheet.getRow(rowActual).createCell(i++);
 				celda.setCellValue("  " + question + "  ");
 				celda.setCellStyle(boldStyle);
 			}
 
 			rowActual++;
 
-			Iterator<Map<String, Object>> iterator = answers.iterator();
+			Iterator<Map<String, Object>> iterator = patientAnswers.iterator();
 
 			while (iterator.hasNext()) {
-				Map<String, Object> answer = iterator.next();
-				XSSFRow row = sheet.createRow(rowActual++);
+				Map<String, Object> patAnswer = iterator.next();
 
-				i = 0;
-				for (String question : questionNames) {
-					String str = answer.get(question) == null ? "" : answer.get(question).toString();
-					row.createCell(i++).setCellValue(str);
+				for (String patientId : patAnswer.keySet()) {
+
+					XSSFRow row = sheet.createRow(rowActual++);
+					row.createCell(0).setCellValue(patientId);
+					Map<String, Object> answer = (Map<String, Object>) patAnswer.get(patientId);
+
+					i = 1;
+					for (String question : questionNames) {
+						String str = answer.get(question) == null ? "" : answer.get(question).toString();
+						row.createCell(i++).setCellValue(str);
+					}
 				}
 			}
 

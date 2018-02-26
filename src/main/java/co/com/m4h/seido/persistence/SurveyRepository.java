@@ -18,6 +18,10 @@ import co.com.m4h.seido.model.Survey;
 @Repository
 public interface SurveyRepository extends PagingAndSortingRepository<Survey, Long> {
 
+	public static final String QUERY_CONTROL_6_MESES = "SELECT DISTINCT s1 FROM Survey s1, Survey s2 "
+			+ "WHERE s1.template.id = :templateCirugiaId AND s1.surveyAnswers IS NOT NULL AND s2.template.id = :templateControl6Id "
+			+ "AND s2.event.id = s1.event.id AND s2.state = 'NOT_STARTED'";
+
 	@Query("SELECT s FROM Survey s WHERE s.patient.id = :patientId ORDER BY s.id ASC")
 	List<Survey> findAllByPatientId(@Param("patientId") Long patientId);
 
@@ -41,4 +45,8 @@ public interface SurveyRepository extends PagingAndSortingRepository<Survey, Lon
 
 	@Query("SELECT s FROM Survey s WHERE s.template.id = :templateId AND (s.state = 'STARTED' OR s.state = 'FINISHED')")
 	Stream<Survey> findByTemplateIdStartedAndFinished(@Param("templateId") Long templateId);
+
+	@Query(QUERY_CONTROL_6_MESES)
+	List<Survey> findSurveysToControl6(@Param("templateCirugiaId") Long templateCirugiaId,
+			@Param("templateControl6Id") Long templateControl6Id);
 }
