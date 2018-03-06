@@ -208,7 +208,7 @@ public class SurveyServiceImpl implements SurveyService {
 
 			////////////////////
 
-			int maxCol = questionNames.size() - 1;
+			int maxCol = questionNames.size();
 
 			XSSFWorkbook wb = new XSSFWorkbook();
 			XSSFSheet sheet = wb.createSheet("Estadisticas");
