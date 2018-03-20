@@ -155,18 +155,35 @@ public class SurveyUtils {
 		// Get all question names from the survey model
 		Set<String> questionNames = getQuestionNamesFromSurveyModel(model);
 		long questionsWithoutAnswer = questionNames.stream().filter(question -> !answers.containsKey(question)).count();
-		return questionNames.size() == answers.size() && questionsWithoutAnswer == 0;
+		return questionsWithoutAnswer == 0; // questionNames.size() == answers.size() &&
 	}
 
 	/**
-	 * Utility method that analise the survey model and extract the question names
+	 * Utility method that analyze the survey model and extract the question names
 	 * 
 	 * @param model
-	 *            Object with the information to analise
+	 *            Object with the information to analyze
 	 * @return Set of question names
 	 */
 	public static Set<String> getQuestionNamesFromSurveyModel(SurveyJs model) {
 		return model.getPages().stream().flatMap(page -> page.elements.stream()).map(question -> question.name)
 				.collect(Collectors.toCollection(LinkedHashSet::new));
+	}
+
+	/**
+	 * Utility method that analyze the survey model and extract the question names
+	 * and titles
+	 * 
+	 * @param model
+	 *            Object with the information to analyze
+	 * @return Set of question names
+	 */
+	public static Map<String, String> getQuestionsFromSurveyModel(SurveyJs model) {
+		Map<String, String> res = new LinkedHashMap<>();
+
+		model.getPages().stream().flatMap(page -> page.elements.stream())
+				.forEach(question -> res.put(question.name, question.title));
+
+		return res;
 	}
 }

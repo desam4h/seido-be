@@ -180,19 +180,10 @@ public class SurveyServiceImpl implements SurveyService {
 	public File getExcel(Long templateId) {
 		try {
 
-			// SurveyTemplate template = surveyTemplateRepository.findOne(templateId);
-			Set<String> questionNames = getTemplateQuestionNames(templateId);
+			Map<String, String> questions = getTemplateQuestions(templateId);
 
 			////////////////////
 			Stream<Survey> surveyStream = surveyRepository.findAllByTemplateId(templateId);
-
-			// Stream<Map<String, Object>> answersStream = surveyStream
-			// .filter(s ->
-			// !s.getState().equals(SurveyState.NOT_STARTED)).map(Survey::getSurveyAnswers)
-			// .map(SurveyUtils::parseSurveyAnswers);
-			//
-			// List<Map<String, Object>> answers =
-			// answersStream.collect(Collectors.toList());
 
 			surveyStream = surveyStream.filter(s -> !s.getState().equals(SurveyState.NOT_STARTED));
 			List<Map<String, Object>> patientAnswers = new ArrayList<>();
@@ -208,7 +199,7 @@ public class SurveyServiceImpl implements SurveyService {
 
 			////////////////////
 
-			int maxCol = questionNames.size();
+			int maxCol = questions.size();
 
 			XSSFWorkbook wb = new XSSFWorkbook();
 			XSSFSheet sheet = wb.createSheet("Estadisticas");
@@ -219,7 +210,6 @@ public class SurveyServiceImpl implements SurveyService {
 			sheet.getPrintSetup().setPaperSize(XSSFPrintSetup.LETTER_PAPERSIZE);
 			sheet.getPrintSetup().setLandscape(true);
 			sheet.getPrintSetup().setFitWidth((short) 1);
-			// sheet.setFitToPage( true );
 			sheet.setAutobreaks(true);
 
 			XSSFFont font = wb.createFont();
@@ -233,41 +223,8 @@ public class SurveyServiceImpl implements SurveyService {
 			boldStyle.setFont(font);
 			boldStyle.setAlignment(XSSFCellStyle.ALIGN_CENTER);
 
-			// for (int i = 0; i < 5; i++)
-			// sheet.addMergedRegion(new CellRangeAddress(i, i, 0, maxCol));
-
 			int rowActual = 0;
-			// SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 			XSSFCell celda = null;
-
-			// // Títulos de Archivo
-			// celda = sheet.createRow(rowActual++).createCell(0);
-			// celda.setCellValue("SEIDO");
-			// celda.setCellStyle(boldStyle);
-			//
-			// celda = sheet.createRow(rowActual++).createCell(0);
-			// celda.setCellValue(template.getSpecialty().getCompany().getName().toUpperCase());
-			// celda.setCellStyle(boldStyle);
-			//
-			// celda = sheet.createRow(rowActual++).createCell(0);
-			// celda.setCellValue(template.getSpecialty().getName().toUpperCase());
-			// celda.setCellStyle(boldStyle);
-			//
-			// celda = sheet.createRow(rowActual++).createCell(0);
-			// celda.setCellValue(template.getName().toUpperCase());
-			// celda.setCellStyle(boldStyle);
-			//
-			// celda = sheet.createRow(rowActual++).createCell(0);
-			// celda.setCellValue("GENERADO EL " + sdf.format(new
-			// Date(System.currentTimeMillis())));
-			// celda.setCellStyle(boldStyle);
-
-			// // Repite la fila de títulos y una fila vacía debajo en todas las hojas al
-			// // imprimir
-			// int filaTitulos = ++rowActual;
-			// String filasRepetir = String.valueOf(1) + ":" + String.valueOf(filaTitulos +
-			// 2);
-			// sheet.setRepeatingRows(CellRangeAddress.valueOf(filasRepetir));
 
 			// Títulos de Columnas
 			celda = sheet.createRow(rowActual).createCell(0);
@@ -275,9 +232,9 @@ public class SurveyServiceImpl implements SurveyService {
 			celda.setCellStyle(boldStyle);
 
 			int i = 1;
-			for (String question : questionNames) {
+			for (String name : questions.keySet()) {
 				celda = sheet.getRow(rowActual).createCell(i++);
-				celda.setCellValue("  " + question + "  ");
+				celda.setCellValue("  " + questions.get(name) + "  ");
 				celda.setCellStyle(boldStyle);
 			}
 
@@ -295,8 +252,8 @@ public class SurveyServiceImpl implements SurveyService {
 					Map<String, Object> answer = (Map<String, Object>) patAnswer.get(patientId);
 
 					i = 1;
-					for (String question : questionNames) {
-						String str = answer.get(question) == null ? "" : answer.get(question).toString();
+					for (String name : questions.keySet()) {
+						String str = answer.get(name) == null ? "" : answer.get(name).toString();
 						row.createCell(i++).setCellValue(str);
 					}
 				}
@@ -315,8 +272,6 @@ public class SurveyServiceImpl implements SurveyService {
 			sheet.lockDeleteColumns();
 			sheet.lockDeleteRows();
 			sheet.lockFormatCells();
-			// sheet.lockFormatColumns();
-			// sheet.lockFormatRows();
 			sheet.lockInsertColumns();
 			sheet.lockInsertRows();
 			sheet.getCTWorksheet().getSheetProtection().setPassword(pwdBytes);
@@ -347,14 +302,14 @@ public class SurveyServiceImpl implements SurveyService {
 		try {
 			Specialty specialty = specialtyRepository.findOne(specialtyId);
 			List<SurveyTemplate> templates = surveyTemplateRepository.findAllBySpecialtyId(specialtyId);
-			Map<Long, Set<String>> templatesQuestions = new HashMap<>();
+			Map<Long, Map<String, String>> templatesQuestions = new HashMap<>();
 
 			int maxCol = 0;
 
 			for (SurveyTemplate st : templates) {
-				Set<String> questionNames = getTemplateQuestionNames(st);
-				maxCol += questionNames.size();
-				templatesQuestions.put(st.getId(), questionNames);
+				Map<String, String> questions = getTemplateQuestions(st);
+				maxCol += questions.size();
+				templatesQuestions.put(st.getId(), questions);
 			}
 
 			XSSFWorkbook wb = new XSSFWorkbook();
@@ -366,7 +321,6 @@ public class SurveyServiceImpl implements SurveyService {
 			sheet.getPrintSetup().setPaperSize(XSSFPrintSetup.LETTER_PAPERSIZE);
 			sheet.getPrintSetup().setLandscape(true);
 			sheet.getPrintSetup().setFitWidth((short) 1);
-			// sheet.setFitToPage( true );
 			sheet.setAutobreaks(true);
 
 			XSSFFont font = wb.createFont();
@@ -390,49 +344,16 @@ public class SurveyServiceImpl implements SurveyService {
 
 			int i = 1;
 			for (SurveyTemplate st : templates) {
-				for (String question : templatesQuestions.get(st.getId())) {
+				Map<String, String> questions = templatesQuestions.get(st.getId());
+
+				for (String name : questions.keySet()) {
 					celda = sheet.getRow(rowActual).createCell(i++);
-					celda.setCellValue("  " + question + "  ");
+					celda.setCellValue("  " + questions.get(name) + "  ");
 					celda.setCellStyle(boldStyle);
 				}
 			}
 
 			rowActual++;
-
-			// // Se arma una lista de las respuestas de la primera encuesta
-			// Stream<Survey> stream =
-			// surveyRepository.findAllByTemplateId(templates.get(0).getId());
-			// Stream<Survey> surveyStream = stream.filter(s ->
-			// !s.getState().equals(SurveyState.NOT_STARTED));
-			// List<Survey> surveyList = surveyStream.collect(Collectors.toList());
-			//
-			// // .map(Survey::getSurveyAnswers).map(SurveyUtils::parseSurveyAnswers);
-			//
-			// Set<String> questionNames = templatesQuestions.get(templates.get(0).getId());
-			//
-			// for (Survey survey : surveyList) {
-			// Map<String, Object> answer =
-			// SurveyUtils.parseSurveyAnswers(survey.getSurveyAnswers());
-			// List<Event> events = eventRepository.findEventsBySpecialtyIdAndPatientId(
-			// survey.getTemplate().getSpecialty().getId(), survey.getPatient().getId());
-			//
-			// ///// Por cada evento se escriben answer y datos de cada evento
-			//
-			// XSSFRow row = sheet.createRow(rowActual++);
-			// row.createCell(0).setCellValue(survey.getPatient().getId());
-			//
-			// i = 1;
-			// for (String question : questionNames) {
-			// String str = answer.get(question) == null ? "" :
-			// answer.get(question).toString();
-			// row.createCell(i++).setCellValue(str);
-			// }
-			//
-			// // Escribir datos de evento
-			//
-			// /////
-			//
-			// }
 
 			List<Patient> patients = patientRepository.findAllByCompanyId(specialty.getCompany().getId());
 
@@ -455,11 +376,10 @@ public class SurveyServiceImpl implements SurveyService {
 
 							} else {
 								Map<String, Object> answers = SurveyUtils.parseSurveyAnswers(survey.getSurveyAnswers());
-								Set<String> questionNames = templatesQuestions.get(st.getId());
+								Set<String> questionNames = templatesQuestions.get(st.getId()).keySet();
 
-								for (String question : questionNames) {
-									String answer = answers.get(question) == null ? ""
-											: answers.get(question).toString();
+								for (String name : questionNames) {
+									String answer = answers.get(name) == null ? "" : answers.get(name).toString();
 									row.createCell(i++).setCellValue(answer);
 								}
 							}
@@ -489,11 +409,10 @@ public class SurveyServiceImpl implements SurveyService {
 
 							} else {
 								Map<String, Object> answers = SurveyUtils.parseSurveyAnswers(survey.getSurveyAnswers());
-								Set<String> questionNames = templatesQuestions.get(st.getId());
+								Set<String> questionNames = templatesQuestions.get(st.getId()).keySet();
 
-								for (String question : questionNames) {
-									String answer = answers.get(question) == null ? ""
-											: answers.get(question).toString();
+								for (String name : questionNames) {
+									String answer = answers.get(name) == null ? "" : answers.get(name).toString();
 									row.createCell(i++).setCellValue(answer);
 								}
 							}
@@ -517,8 +436,6 @@ public class SurveyServiceImpl implements SurveyService {
 			sheet.lockDeleteColumns();
 			sheet.lockDeleteRows();
 			sheet.lockFormatCells();
-			// sheet.lockFormatColumns();
-			// sheet.lockFormatRows();
 			sheet.lockInsertColumns();
 			sheet.lockInsertRows();
 			sheet.getCTWorksheet().getSheetProtection().setPassword(pwdBytes);
@@ -557,15 +474,42 @@ public class SurveyServiceImpl implements SurveyService {
 	}
 
 	/**
-	 * Gets the question names from the SurveyTemplate.
+	 * Gets the question names and titles from the template model.
+	 * 
+	 * @param templateId
+	 *            Template identifier
+	 * @return Map of names and titles in order from the template model.
+	 */
+	private Map<String, String> getTemplateQuestions(Long templateId) {
+		SurveyTemplate template = surveyTemplateRepository.findOne(templateId);
+		SurveyJs surveyJsModel = SurveyUtils.parseSurveyModel(template.getJsSurvey());
+
+		return SurveyUtils.getQuestionsFromSurveyModel(surveyJsModel);
+	}
+
+	// /**
+	// * Gets the question names from the SurveyTemplate.
+	// *
+	// * @param template
+	// * SurveyTemplate
+	// * @return Set of names in order from the SurveyTemplate.
+	// */
+	// private Set<String> getTemplateQuestionNames(SurveyTemplate template) {
+	// SurveyJs surveyJsModel =
+	// SurveyUtils.parseSurveyModel(template.getJsSurvey());
+	// return SurveyUtils.getQuestionNamesFromSurveyModel(surveyJsModel);
+	// }
+
+	/**
+	 * Gets the question names and titles from the SurveyTemplate.
 	 * 
 	 * @param template
 	 *            SurveyTemplate
-	 * @return Set of names in order from the SurveyTemplate.
+	 * @return Map of names and titles in order from the SurveyTemplate.
 	 */
-	private Set<String> getTemplateQuestionNames(SurveyTemplate template) {
+	private Map<String, String> getTemplateQuestions(SurveyTemplate template) {
 		SurveyJs surveyJsModel = SurveyUtils.parseSurveyModel(template.getJsSurvey());
-		return SurveyUtils.getQuestionNamesFromSurveyModel(surveyJsModel);
+		return SurveyUtils.getQuestionsFromSurveyModel(surveyJsModel);
 	}
 
 	/**
