@@ -1,10 +1,14 @@
 package co.com.m4h.seido.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -27,8 +31,12 @@ public class SurveyTemplate extends AbstractEntity {
 	@Enumerated(EnumType.STRING)
 	private SurveyType type;
 
-	@ManyToOne
-	private Specialty specialty;
+	// @ManyToOne
+	// private Specialty specialty;
+
+	@ManyToMany
+	@JoinTable(name = "SURVEY_TEMPLATE_SPECIALTY", joinColumns = @JoinColumn(name = "TEMPLATE_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "SPECIALTY_ID", referencedColumnName = "ID"))
+	private List<Specialty> specialties;
 
 	private Integer order_id;
 }

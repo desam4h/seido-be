@@ -108,12 +108,18 @@ public class SurveyServiceImpl implements SurveyService {
 		Long eventId = Optional.ofNullable(persistedSurvey.getEvent()).map(event -> event.getId()).orElse(null);
 
 		// Then the object with the answers ready to be query is persisted
+
+		// TODO: Ahora los templates tienen varias especialidades, arreglar esta parte
+		// para que tome todas las especialidades de la lista, está cogiendo sólo la
+		// primera
 		SurveyStatistics statistics = SurveyStatistics.builder().surveyId(persistedSurvey.getId()).companyId(companyId)
 				.eventId(eventId).patientId(persistedSurvey.getPatient().getId())
-				.specialtyId(persistedSurvey.getTemplate().getSpecialty().getId())
+				.specialtyId(persistedSurvey.getTemplate().getSpecialties().get(0).getId())
 				.templateId(persistedSurvey.getTemplate().getId())
 				.surveyAnswersCsv(SurveyUtils.formatAnswersAsCSV(answers, false)).build();
+
 		statisticRepository.save(statistics);
+
 		return save(persistedSurvey);
 	}
 

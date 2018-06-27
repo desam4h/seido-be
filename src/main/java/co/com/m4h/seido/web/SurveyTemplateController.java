@@ -23,7 +23,6 @@ import co.com.m4h.seido.model.SurveyTemplate;
 import co.com.m4h.seido.security.service.JwtMessageResponse;
 import co.com.m4h.seido.service.SurveyService;
 import co.com.m4h.seido.service.SurveyTemplateService;
-import co.com.m4h.seido.service.UploaderService;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -44,8 +43,8 @@ public class SurveyTemplateController {
 	@Autowired
 	private SurveyService surveyService;
 
-	@Autowired
-	private UploaderService uploaderService;
+	// @Autowired
+	// private UploaderService uploaderService;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<SurveyTemplate>> findAll(@PathVariable(SPECIALTY_ID_PARAM) Long specialtyId) {
@@ -142,12 +141,14 @@ public class SurveyTemplateController {
 
 	}
 
-	@RequestMapping(value = "/{templateId}/upload", method = RequestMethod.POST)
-	public ResponseEntity<String> uploadInfoByTemplate(@PathVariable(TEMPLATE_ID) Long templateId,
-			@RequestBody String csvInfo) {
-		System.out.println("::: csvInfo = " + csvInfo);
-		int itemsUploaded = uploaderService.uploadInfo(templateId, csvInfo);
-		String response = "{\"uploadedRows\":%s}";
-		return new ResponseEntity<>(String.format(response, Integer.toString(itemsUploaded)), HttpStatus.OK);
-	}
+	// @RequestMapping(value = "/{templateId}/upload", method = RequestMethod.POST)
+	// public ResponseEntity<String> uploadInfoByTemplate(@PathVariable(TEMPLATE_ID)
+	// Long templateId,
+	// @RequestBody String csvInfo) {
+	// System.out.println("::: csvInfo = " + csvInfo);
+	// int itemsUploaded = uploaderService.uploadInfo(templateId, csvInfo);
+	// String response = "{\"uploadedRows\":%s}";
+	// return new ResponseEntity<>(String.format(response,
+	// Integer.toString(itemsUploaded)), HttpStatus.OK);
+	// }
 }

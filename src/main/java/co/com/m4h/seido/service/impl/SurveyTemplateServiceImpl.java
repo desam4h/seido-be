@@ -1,5 +1,6 @@
 package co.com.m4h.seido.service.impl;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +40,7 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
 		if (!specialty.getCompany().getId().equals(companyId)) {
 			throw new IllegalArgumentException("Forbidden company to add specialty");
 		} else {
-			surveyTemplate.setSpecialty(specialty);
+			surveyTemplate.setSpecialties(Arrays.asList(specialty));
 			return surveyTemplateRepository.save(surveyTemplate);
 		}
 	}
