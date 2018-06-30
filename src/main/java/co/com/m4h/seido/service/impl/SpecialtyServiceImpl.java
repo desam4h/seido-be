@@ -22,7 +22,10 @@ public class SpecialtyServiceImpl implements SpecialtyService {
 
 	@Override
 	public Specialty save(Specialty specialty) {
-		specialty.setCompany(SecurityUtil.getCompany());
+
+		if (!SecurityUtil.getRole().equals("ROLE_ROOT"))
+			specialty.setCompany(SecurityUtil.getCompany());
+
 		return specialtyRepository.save(specialty);
 	}
 
