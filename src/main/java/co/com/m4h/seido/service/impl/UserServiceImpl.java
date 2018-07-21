@@ -69,8 +69,17 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<User> findAll() {
-		// Long companyId = SecurityUtil.getCompanyId();
-		return userRepository.findAll();
+		String role = SecurityUtil.getRole();
+
+		if (role.equals("ROLE_ROOT")) {
+
+			return userRepository.findAll();
+		} else {
+
+			Long companyId = SecurityUtil.getCompanyId();
+
+			return userRepository.findAllByCompanyId(companyId);
+		}
 	}
 
 	@Override
